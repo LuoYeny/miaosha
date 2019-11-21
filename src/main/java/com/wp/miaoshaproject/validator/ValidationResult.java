@@ -18,7 +18,9 @@ public class ValidationResult {
     public void setHasErrors(boolean hasErrors) {
         this.hasErrors = hasErrors;
     }
-
+    public boolean isHasErrors() {
+        return hasErrors;
+    }
 
     private Map<String, String> errorMsgMap = new HashMap<>();
 
@@ -30,9 +32,7 @@ public class ValidationResult {
         this.errorMsgMap = errorMsgMap;
     }
 
-    public boolean isHasErrors() {
-        return hasErrors;
-    }
+
 
     /**
      * 实现通用的通过格式化字符串信息获取错误结果的msg方法
