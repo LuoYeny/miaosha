@@ -147,7 +147,7 @@
                   <dependency>
                       <groupId>mysql</groupId>
                       <artifactId>mysql-connector-java</artifactId>
-                      <version>5.1.44</version>
+                      <version>8.0.17</version>
                   </dependency>
               </dependencies>
 
@@ -179,6 +179,10 @@
                   <source>8</source>
                   <target>8</target>
               </configuration>
+          </plugin>
+          <plugin>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-maven-plugin</artifactId>
           </plugin>
       </plugins>
   </build>
