@@ -4,6 +4,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * @author WangPan wangpanhust@qq.com
@@ -11,7 +12,7 @@ import javax.validation.constraints.NotNull;
  * @description  这是业务的核心模型，与数据库中的模型不是一一对应的，这里是数据库中user_info和user_password分离，但是业务里面要合并成一个模型
  **/
 
-public class UserModel {
+public class UserModel implements Serializable {
     private Integer id;
 
     @NotBlank(message = "姓名不能为空")

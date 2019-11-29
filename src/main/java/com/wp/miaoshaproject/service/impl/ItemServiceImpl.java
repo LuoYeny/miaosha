@@ -116,7 +116,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemModel getItemById(Integer id) {
+    public ItemModel getItemById(Integer id)  {
         ItemDO itemDO = null;
         try {
             itemDO = itemDOMapper.selectByPrimaryKey(id);
@@ -133,7 +133,10 @@ public class ItemServiceImpl implements ItemService {
 
         //获取活动商品信息
         PromoModel promoModel = promoService.getPromoByItemId(itemModel.getId());
-        if (promoModel != null && promoModel.getStatus().intValue() != 3) {
+//        if (promoModel != null && promoModel.getStatus().intValue() != 3) {
+//            itemModel.setPromoModel(promoModel);
+//        }
+        if (promoModel != null ) {
             itemModel.setPromoModel(promoModel);
         }
 

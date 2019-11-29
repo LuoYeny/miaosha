@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author WangPan wangpanhust@qq.com
@@ -23,10 +24,12 @@ public class ValidationResult {
     }
 
     private Map<String, String> errorMsgMap = new HashMap<>();
+    private ConcurrentHashMap q = new ConcurrentHashMap();
 
     public Map<String, String> getErrorMsgMap() {
         return errorMsgMap;
     }
+
 
     public void setErrorMsgMap(Map<String, String> errorMsgMap) {
         this.errorMsgMap = errorMsgMap;

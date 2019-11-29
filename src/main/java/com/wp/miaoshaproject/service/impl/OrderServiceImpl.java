@@ -72,6 +72,8 @@ public class OrderServiceImpl implements OrderService {
                 //校验秒杀活动是否正在进行
             }else if (itemModel.getPromoModel().getStatus().intValue() != 2) {
                 throw new BusinessException(PARAMETER_VALIDATION_ERROR, "活动还未开始");
+            }else if (itemModel.getPromoModel().getStatus().intValue() != 3) {
+                throw new BusinessException(PARAMETER_VALIDATION_ERROR, "活动已经结束");
             }
         }
 
