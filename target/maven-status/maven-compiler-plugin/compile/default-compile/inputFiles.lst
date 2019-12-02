@@ -13,6 +13,7 @@ D:\JAVA\mooc\miaosha\src\main\java\com\wp\miaoshaproject\controller\ItemControll
 D:\JAVA\mooc\miaosha\src\main\java\com\wp\miaoshaproject\controller\viewobject\UserVO.java
 D:\JAVA\mooc\miaosha\src\main\java\com\wp\miaoshaproject\dao\UserPasswordDOMapper.java
 D:\JAVA\mooc\miaosha\src\main\java\com\wp\miaoshaproject\service\model\UserModel.java
+D:\JAVA\mooc\miaosha\src\main\java\com\wp\miaoshaproject\config\SpringSessionConfig.java
 D:\JAVA\mooc\miaosha\src\main\java\com\wp\miaoshaproject\dataobject\ItemDO.java
 D:\JAVA\mooc\miaosha\src\main\java\com\wp\miaoshaproject\dao\ItemStockDOMapper.java
 D:\JAVA\mooc\miaosha\src\main\java\com\wp\miaoshaproject\dao\ItemDOMapper.java

@@ -5,6 +5,7 @@ com\wp\miaoshaproject\service\OrderService.class
 com\wp\miaoshaproject\config\WebServerConfiguration.class
 com\wp\miaoshaproject\controller\viewobject\ItemVO.class
 com\wp\miaoshaproject\dao\ItemStockDOMapper.class
+com\wp\miaoshaproject\config\SpringSessionConfig.class
 com\wp\miaoshaproject\error\BusinessException.class
 com\wp\miaoshaproject\dao\PromoDOMapper.class
 com\wp\miaoshaproject\dataobject\OrderDO.class

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +31,8 @@ import java.util.stream.Collectors;
 //跨域请求，保证session发挥作用
 @CrossOrigin(allowCredentials = "true",allowedHeaders = "*")
 public class ItemController extends BaseController{
-
+    @Autowired
+    private HttpServletRequest httpServletRequest;
     @Autowired
     private ItemService itemService;
 

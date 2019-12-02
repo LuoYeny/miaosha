@@ -42,6 +42,8 @@ public class OrderController extends BaseController{
     public CommonReturnType createOrder(@RequestParam(name = "itemId") Integer itemId,
                                         @RequestParam(name = "amount") Integer amount,
                                         @RequestParam(name = "promoId", required = false) Integer promoId) throws BusinessException {
+
+     //   System.out.println("order:"+httpServletRequest.getCookies());
         Boolean isLogin = (Boolean) httpServletRequest.getSession().getAttribute("IS_LOGIN");
         if(isLogin == null || !isLogin.booleanValue()) {
             throw new BusinessException(PARAMETER_VALIDATION_ERROR, "用户还未登录，无法下单");
