@@ -6,6 +6,7 @@
 第二阶段：基于分布式扩展
 
 1.redis
+
 在使用redis存储session时 每次刷新session都不同
 经查询：升级springboot 2.x  ——跨域导致session问题
 spring-session 2.x 中 Cookie里面引入了SameSite ，他默认值是 Lax 
