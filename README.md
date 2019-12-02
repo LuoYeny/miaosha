@@ -23,7 +23,7 @@ SameSite = Strict：
 SameSite = Lax：
 
 
-　　意为宽松模式，在GET请求是可以作为第三方cookie，但是不能携带cookie进行跨域post访问（这就很蛋疼了，我们那个校验接口就是POST请求）
+　　意为宽松模式，在GET请求是可以作为第三方cookie，但是不能携带cookie进行跨域post访问
 
 总结：前端请求到后台，每次session都不一样，每次都是新的会话，导致获取不到用户信息
 
