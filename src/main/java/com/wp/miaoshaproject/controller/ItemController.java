@@ -9,6 +9,7 @@ import com.wp.miaoshaproject.service.model.ItemModel;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -31,10 +33,12 @@ import java.util.stream.Collectors;
 //跨域请求，保证session发挥作用
 @CrossOrigin(allowCredentials = "true",allowedHeaders = "*")
 public class ItemController extends BaseController{
-    @Autowired
-    private HttpServletRequest httpServletRequest;
+
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     //public static final String CONTENT_TYPE_FORMED="application/x-www-form-urlencoded";
 
@@ -75,8 +79,22 @@ public class ItemController extends BaseController{
     @RequestMapping(value = "/get", method = {RequestMethod.GET})
     @ResponseBody
     public CommonReturnType getItem(@RequestParam(name = "id") Integer id) {
-        ItemModel itemModel = itemService.getItemById(id);
-        ItemVO itemVO = this.convertVOFromModel(itemModel);
+
+        //根据商品id到redis获取
+        ItemVO itemVO = null;
+        try {
+            ItemModel itemModel = (ItemModel) redisTemplate.opsForValue().get("item_"+id);
+            if(itemModel==null){
+                itemModel = itemService.getItemById(id);
+                redisTemplate.opsForValue().set("item_"+id,itemModel);
+                //缓存失效时间
+                redisTemplate.expire("item_"+id,10, TimeUnit.MINUTES);
+            }
+
+            itemVO = this.convertVOFromModel(itemModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return CommonReturnType.create(itemVO);
     }

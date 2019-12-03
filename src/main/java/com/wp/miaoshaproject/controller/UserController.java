@@ -71,10 +71,10 @@ public class UserController extends BaseController{
 
         String uuidToken = UUID.randomUUID().toString();
        uuidToken = uuidToken.replace("-","");
-        System.out.println(uuidToken);
+
         //建立token和用户登陆态的联系
         redisTemplate.opsForValue().set(uuidToken,userModel);
-        System.out.println( redisTemplate.opsForValue().get(uuidToken).toString());
+
         //设置超时时间 1h
         redisTemplate.expire(uuidToken,1, TimeUnit.HOURS);
 

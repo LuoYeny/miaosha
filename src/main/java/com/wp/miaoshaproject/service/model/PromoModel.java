@@ -2,6 +2,7 @@ package com.wp.miaoshaproject.service.model;
 
 import org.joda.time.DateTime;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
  * @date 2019/6/10 21:34
  * @description 秒杀活动的领域模型
  **/
-public class PromoModel {
+public class PromoModel implements Serializable {
 
     private Integer id;
 

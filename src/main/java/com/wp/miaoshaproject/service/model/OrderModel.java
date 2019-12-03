@@ -1,5 +1,6 @@
 package com.wp.miaoshaproject.service.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -7,7 +8,7 @@ import java.math.BigDecimal;
  * @date 2019/6/5 16:51
  * @description 订单的领域模型
  **/
-public class OrderModel {
+public class OrderModel  implements Serializable {
 
     //订单号采用String类型，保存的各个字段都有意义
     private String id;

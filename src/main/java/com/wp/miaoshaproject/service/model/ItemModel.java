@@ -1,5 +1,6 @@
 package com.wp.miaoshaproject.service.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.validation.constraints.Min;
@@ -11,7 +12,7 @@ import javax.validation.constraints.NotNull;
  * @date 2019/6/3 22:10
  * @description 商品的领域模型，进行开发时优先设计领域模型再考虑数据库设计
  **/
-public class ItemModel {
+public class ItemModel implements Serializable {
 
     private Integer id;
 
