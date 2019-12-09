@@ -11,4 +11,7 @@ public interface UserService {
 
     UserModel validateLogin(String telphone, String encrptPassword) throws BusinessException;
 
+    //通过缓存获取用户对象
+    UserModel getUserByIdInCache(Integer id);
+
 }

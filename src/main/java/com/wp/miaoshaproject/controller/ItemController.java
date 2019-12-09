@@ -3,7 +3,9 @@ package com.wp.miaoshaproject.controller;
 import com.wp.miaoshaproject.controller.viewobject.ItemVO;
 import com.wp.miaoshaproject.error.BusinessException;
 import com.wp.miaoshaproject.response.CommonReturnType;
+import com.wp.miaoshaproject.service.CacheService;
 import com.wp.miaoshaproject.service.ItemService;
+import com.wp.miaoshaproject.service.PromoService;
 import com.wp.miaoshaproject.service.model.ItemModel;
 
 import org.joda.time.format.DateTimeFormat;
@@ -40,6 +42,12 @@ public class ItemController extends BaseController{
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private CacheService cacheService;
+
+    @Autowired
+    private PromoService promoService;
+
     //public static final String CONTENT_TYPE_FORMED="application/x-www-form-urlencoded";
 
     @RequestMapping(value = "/create", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
@@ -62,6 +70,14 @@ public class ItemController extends BaseController{
         return CommonReturnType.create(itemVO);
     }
 
+    @RequestMapping(value = "/publishPromo", method = {RequestMethod.GET})
+    @ResponseBody
+    public CommonReturnType publishPromo(@RequestParam(name="id")Integer id){
+
+        promoService.publishPromo(id);
+
+        return CommonReturnType.create(null);
+    }
     @RequestMapping(value = "/list", method = {RequestMethod.GET})
     @ResponseBody
     public CommonReturnType listItem() {
@@ -82,19 +98,29 @@ public class ItemController extends BaseController{
 
         //根据商品id到redis获取
         ItemVO itemVO = null;
+        ItemModel itemModel= null;
         try {
-            ItemModel itemModel = (ItemModel) redisTemplate.opsForValue().get("item_"+id);
+            itemModel = (ItemModel)cacheService.getFormCommonCache("item_"+id);
+
             if(itemModel==null){
-                itemModel = itemService.getItemById(id);
-                redisTemplate.opsForValue().set("item_"+id,itemModel);
-                //缓存失效时间
-                redisTemplate.expire("item_"+id,10, TimeUnit.MINUTES);
+                itemModel = (ItemModel) redisTemplate.opsForValue().get("item_"+id);
+
+                if(itemModel==null){
+                    //若Redis内不存在，则访问下游service
+                    itemModel = itemService.getItemById(id);
+                    redisTemplate.opsForValue().set("item_"+id,itemModel);
+                    //缓存失效时间
+                    redisTemplate.expire("item_"+id,10, TimeUnit.MINUTES);
+                }
             }
 
-            itemVO = this.convertVOFromModel(itemModel);
+            //填充本地缓存
+            cacheService.setCommonCache("item_"+id,itemModel);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        itemVO = this.convertVOFromModel(itemModel);
+
 
         return CommonReturnType.create(itemVO);
     }

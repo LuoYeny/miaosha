@@ -20,4 +20,7 @@ public interface ItemService {
 
     //销量增加
     void increaseSales(Integer itemId, Integer amount) throws BusinessException;
+
+    //item及promo model 缓存模型
+    ItemModel getItemByIdInCache(Integer id);
 }

@@ -21,7 +21,7 @@ public class JodaDateTimeJsonDeserializer extends JsonDeserializer<DateTime> {
     public DateTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
         Iterator<String> dataStringIt = jsonParser.readValuesAs(String.class);
         String dataString=null;
-        while (dataStringIt.hasNext()){
+        if (dataStringIt.hasNext()){
              dataString =dataStringIt.next();
         }
         DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
