@@ -162,14 +162,17 @@ public class ItemServiceImpl implements ItemService {
     public boolean decreaseStcok(Integer itemId, Integer amount) throws BusinessException {
         //int affectedRow = itemStockDOMapper.decreaseStock(itemId, amount);
         long result = redisTemplate.opsForValue().decrement("promo_item_stock_" + itemId, amount.intValue());
-        if (result >= 0) {
-            //  boolean mqResult = mqProducer.asyncReduceStock(itemId,amount);
-//             if(!mqResult){
-//                 redisTemplate.opsForValue().increment("promo_item_stock_"+itemId,amount.intValue());
-//                 return false;
-//             }
+        System.out.println("result:  "+result);
+        if (result >  0) {
+             //更新库存成功
             return true;
-        } else {
+        } else if(result==0){
+            //打上库存已售罄的标识
+            redisTemplate.opsForValue().set("promo_item_stock_invalid_"+itemId,"true");
+            System.out.println("售罄");
+            //更新库存成功
+            return true;
+        }else {
             increaseStcok(itemId, amount);
             return false;
         }

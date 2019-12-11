@@ -69,6 +69,11 @@ public class OrderController extends BaseController{
             throw new BusinessException(PARAMETER_VALIDATION_ERROR, "用户还未登录，无法下单");
         }
 
+        //判断库存是否已售罄，若对应的库存售罄key存在，则直接返回下单失败
+        if(redisTemplate.hasKey("promo_item_stock_invalid_"+itemId)){
+
+            throw new BusinessException(EmBusinessError.STOCK_NOT_ENOUGH);
+        }
         //获取用户信息
        // UserModel userModel = (UserModel) httpServletRequest.getSession().getAttribute("LOGIN_USER");
        //加入库存流水的init状态

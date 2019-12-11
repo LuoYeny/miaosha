@@ -91,7 +91,7 @@ public class OrderServiceImpl implements OrderService {
         //减Redis
         boolean result = itemService.decreaseStcok(itemId, amount);
         if (!result) {
-            throw new BusinessException(STOCK_NOT_ENOUGH);
+            throw new BusinessException(EmBusinessError.STOCK_NOT_ENOUGH);
         }
 
         //3、订单入库
