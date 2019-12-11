@@ -170,3 +170,11 @@ CREATE TABLE `user_password` (
 INSERT INTO `user_password` VALUES ('1', 'asgfgaga', '1');
 INSERT INTO `user_password` VALUES ('2', 'gY3eG8oRiYvdI10b0CBKig==', '14');
 INSERT INTO `user_password` VALUES ('6', '+uCyfEUccohnpWfowbtOUw==', '21');
+
+
+CREATE TABLE `miaosha`.`stock_log`  (
+  `stock_log_id` varchar(64) NOT NULL DEFAULT 0,
+  `item_id` int(0) NOT NULL,
+  `amount` int(0) NOT NULL,
+  PRIMARY KEY (`stock_log_id`)
+);

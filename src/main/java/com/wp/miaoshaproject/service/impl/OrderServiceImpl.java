@@ -2,9 +2,12 @@ package com.wp.miaoshaproject.service.impl;
 
 import com.wp.miaoshaproject.dao.OrderDOMapper;
 import com.wp.miaoshaproject.dao.SequenceDOMapper;
+import com.wp.miaoshaproject.dao.StockLogDOMapper;
 import com.wp.miaoshaproject.dataobject.OrderDO;
 import com.wp.miaoshaproject.dataobject.SequenceDO;
+import com.wp.miaoshaproject.dataobject.StockLogDO;
 import com.wp.miaoshaproject.error.BusinessException;
+import com.wp.miaoshaproject.error.EmBusinessError;
 import com.wp.miaoshaproject.service.ItemService;
 import com.wp.miaoshaproject.service.OrderService;
 import com.wp.miaoshaproject.service.UserService;
@@ -17,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -45,9 +50,12 @@ public class OrderServiceImpl implements OrderService {
     @Autowired(required = false)
     private SequenceDOMapper sequenceDOMapper;
 
+    @Autowired
+    private StockLogDOMapper stockLogDOMapper;
+
     @Override
     @Transactional
-    public OrderModel createOrder(Integer userId, Integer itemId, Integer promoId, Integer amount) throws BusinessException {
+    public OrderModel createOrder(Integer userId, Integer itemId, Integer promoId, Integer amount,String stockLogId) throws BusinessException {
 
         //1、校验下单状态，商品是否存在，用户是否合法，购买数量是否正确
       //  ItemModel itemModel = itemService.getItemById(itemId);
@@ -80,6 +88,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         //2、落单减库存（本例），支付减库存（其他方式）
+        //减Redis
         boolean result = itemService.decreaseStcok(itemId, amount);
         if (!result) {
             throw new BusinessException(STOCK_NOT_ENOUGH);
@@ -108,7 +117,26 @@ public class OrderServiceImpl implements OrderService {
 
         //商品销量对应增加
         itemService.increaseSales(itemId, amount);
-
+         //设置库存流水状态为成功
+        StockLogDO stockLogDO = stockLogDOMapper.selectByPrimaryKey(stockLogId);
+        if(stockLogDO==null){
+            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR);
+        }
+        stockLogDO.setStatus(2);
+        stockLogDOMapper.updateByPrimaryKeySelective(stockLogDO);
+        //距离最近的@Transaction更新成功后执行
+//        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+//            @Override
+//            public void afterCommit() {
+//                //异步更新库存
+//                boolean mqResult = itemService.asyncDecreaseStcok(itemId,amount);
+////                if(!mqResult){
+////                    itemService.increaseSales(itemId,amount);
+////                    throw  new BusinessException(EmBusinessError.MQ_SEND_FAIL);
+////                }
+//
+//            }
+//        });
         //4、返回前端
         return orderModel;
     }

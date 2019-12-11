@@ -11,7 +11,7 @@
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <!--数据库连接地址账号密码-->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/miaosha?useUnicode=true&amp;characterEncoding=utf-8&amp;nullCatalogMeansCurrent=true&amp;serverTimezone=GMT"
+                        connectionURL="jdbc:mysql://123.57.72.45:3306/miaosha?useUnicode=true&amp;characterEncoding=utf-8&amp;nullCatalogMeansCurrent=true&amp;serverTimezone=GMT"
                         userId="root"
                         password="123456">
         </jdbcConnection>
@@ -66,7 +66,7 @@
             <!--enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
             <!--selectByExampleQueryId="false" ></table>-->
 
-        <table tableName="promo" domainObjectName="PromoDO" enableCountByExample="false"
+        <table tableName="stock_log" domainObjectName="StockLogDO" enableCountByExample="false"
             enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
             selectByExampleQueryId="false" ></table>
 

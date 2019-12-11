@@ -1,7 +1,10 @@
 package com.wp.miaoshaproject.controller;
 
 import com.wp.miaoshaproject.error.BusinessException;
+import com.wp.miaoshaproject.error.EmBusinessError;
+import com.wp.miaoshaproject.mq.MqProducer;
 import com.wp.miaoshaproject.response.CommonReturnType;
+import com.wp.miaoshaproject.service.ItemService;
 import com.wp.miaoshaproject.service.OrderService;
 import com.wp.miaoshaproject.service.model.OrderModel;
 import com.wp.miaoshaproject.service.model.UserModel;
@@ -42,6 +45,11 @@ public class OrderController extends BaseController{
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private MqProducer mqProducer;
+    @Autowired
+    private ItemService itemService;
+
     @RequestMapping(value = "/createorder", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonReturnType createOrder(@RequestParam(name = "itemId") Integer itemId,
@@ -63,8 +71,14 @@ public class OrderController extends BaseController{
 
         //获取用户信息
        // UserModel userModel = (UserModel) httpServletRequest.getSession().getAttribute("LOGIN_USER");
+       //加入库存流水的init状态
+      String stockLogId=  itemService.initStockLog(itemId,amount);
 
-        OrderModel orderModel = orderService.createOrder(userModel.getId(), itemId, promoId, amount);
+
+        //再去完成对应的下单事物型消息机制
+        if (!mqProducer.TransactionAsyncReduceStock(userModel.getId(), itemId, promoId, amount, stockLogId)) {
+             throw new BusinessException(EmBusinessError.UNKNOWN_ERROR,"下单失败");
+        }
         return CommonReturnType.create(null);
     }
 
