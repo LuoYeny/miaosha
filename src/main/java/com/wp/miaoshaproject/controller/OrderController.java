@@ -1,5 +1,6 @@
 package com.wp.miaoshaproject.controller;
 
+import com.google.common.util.concurrent.RateLimiter;
 import com.wp.miaoshaproject.error.BusinessException;
 import com.wp.miaoshaproject.error.EmBusinessError;
 import com.wp.miaoshaproject.mq.MqProducer;
@@ -63,9 +64,13 @@ public class OrderController extends BaseController{
     private PromoService promoService;
 
     private ExecutorService executorService;
+
+    private RateLimiter orderCreateRateLimiter;
     @PostConstruct
     public void init(){
         executorService=  Executors.newFixedThreadPool(20);
+        orderCreateRateLimiter=RateLimiter.create(100);//令牌桶 限流5
+
     }
     //生成验证码
     @RequestMapping(value = "/generateverifycode",method = {RequestMethod.GET,RequestMethod.POST})
@@ -115,6 +120,11 @@ public class OrderController extends BaseController{
                                         @RequestParam(name = "amount") Integer amount,
                                         @RequestParam(name = "promoId", required = false) Integer promoId,
                                         @RequestParam(name = "promoToken") String promoToken) throws BusinessException {
+        //限制流量
+        if(orderCreateRateLimiter.acquire()<=0){
+            throw new BusinessException(EmBusinessError.RATELIMT);
+        }
+
         //获取前端传来的token
         String token = httpServletRequest.getParameterMap().get("token")[0];
         if(StringUtils.isEmpty(token)){
