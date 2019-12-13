@@ -60,32 +60,34 @@ public class OrderServiceImpl implements OrderService {
         //1、校验下单状态，商品是否存在，用户是否合法，购买数量是否正确
       //  ItemModel itemModel = itemService.getItemById(itemId);
         ItemModel itemModel= itemService.getItemByIdInCache(itemId);
+
         if (itemModel == null) {
             throw new BusinessException(PARAMETER_VALIDATION_ERROR, "商品信息不存在");
         }
-
-       // UserModel userModel = userService.getUserById(userId);
-        UserModel userModel= userService.getUserByIdInCache(userId);
-        if (userModel == null) {
-            throw new BusinessException(PARAMETER_VALIDATION_ERROR, "用户信息不存在");
-        }
+        //已经用秒杀令牌验证过了
+//
+//       // UserModel userModel = userService.getUserById(userId);
+//        UserModel userModel= userService.getUserByIdInCache(userId);
+//        if (userModel == null) {
+//            throw new BusinessException(PARAMETER_VALIDATION_ERROR, "用户信息不存在");
+//        }
 
         //限制购买数量不能大于99
         if (amount < 1 || amount > 99) {
             throw new BusinessException(PARAMETER_VALIDATION_ERROR, "商品购买数量不正确");
         }
 
-        if (promoId != null) {
-            //校验活动是否存在适用商品
-            if (promoId.intValue() != itemModel.getPromoModel().getId()) {
-                throw new BusinessException(PARAMETER_VALIDATION_ERROR, "活动信息不正确");
-                //校验秒杀活动是否正在进行
-            }else if (itemModel.getPromoModel().getStatus().intValue() == 1) {
-                throw new BusinessException(PARAMETER_VALIDATION_ERROR, "活动还未开始");
-            }else if (itemModel.getPromoModel().getStatus().intValue() == 3) {
-                throw new BusinessException(PARAMETER_VALIDATION_ERROR, "活动已经结束");
-            }
-        }
+//        if (promoId != null) {
+//            //校验活动是否存在适用商品
+//            if (promoId.intValue() != itemModel.getPromoModel().getId()) {
+//                throw new BusinessException(PARAMETER_VALIDATION_ERROR, "活动信息不正确");
+//                //校验秒杀活动是否正在进行
+//            }else if (itemModel.getPromoModel().getStatus().intValue() == 1) {
+//                throw new BusinessException(PARAMETER_VALIDATION_ERROR, "活动还未开始");
+//            }else if (itemModel.getPromoModel().getStatus().intValue() == 3) {
+//                throw new BusinessException(PARAMETER_VALIDATION_ERROR, "活动已经结束");
+//            }
+//        }
 
         //2、落单减库存（本例），支付减库存（其他方式）
         //减Redis
